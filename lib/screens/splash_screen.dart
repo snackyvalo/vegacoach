@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:go_router/go_router.dart';
-import '../theme/app_theme.dart';
+import '../widgets/vega_background.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -18,8 +18,8 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   void _checkAuth() async {
-    // Wait for the Firebase Auth to read token
-    await Future.delayed(const Duration(milliseconds: 1500));
+    // Wait for the Firebase Auth to read token seamlessly
+    await Future.delayed(const Duration(milliseconds: 500));
     if (mounted) {
       if (FirebaseAuth.instance.currentUser != null) {
         context.go('/');
@@ -31,27 +31,9 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppTheme.background,
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Image.asset(
-              'assets/images/logo.png', // Assuming this exists or falls back safely
-              width: 120,
-              errorBuilder: (context, error, stackTrace) => const Icon(
-                Icons.sports_esports,
-                size: 80,
-                color: AppTheme.primaryContainer,
-              ),
-            ),
-            const SizedBox(height: 24),
-            const CircularProgressIndicator(
-              valueColor: AlwaysStoppedAnimation<Color>(AppTheme.primaryContainer),
-            ),
-          ],
-        ),
+    return const Scaffold(
+      body: VegaBackground(
+        child: Center(),
       ),
     );
   }
