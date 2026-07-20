@@ -43,12 +43,12 @@ class _SplashScreenState extends State<SplashScreen> {
               errorBuilder: (context, error, stackTrace) => const Icon(
                 Icons.sports_esports,
                 size: 80,
-                color: AppTheme.accent,
+                color: AppTheme.primaryContainer,
               ),
             ),
             const SizedBox(height: 24),
             const CircularProgressIndicator(
-              valueColor: AlwaysStoppedAnimation<Color>(AppTheme.accent),
+              valueColor: AlwaysStoppedAnimation<Color>(AppTheme.primaryContainer),
             ),
           ],
         ),
