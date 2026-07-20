@@ -7,6 +7,7 @@ class VoicePartyProvider extends ChangeNotifier {
   bool _isJoined = false;
   bool _isMuted = false;
   bool _isDeafened = false;
+  bool _isEngineInit = false;
   String? _currentRoomId;
   List<String> _remoteUsers = [];
 
@@ -17,6 +18,11 @@ class VoicePartyProvider extends ChangeNotifier {
   List<String> get remoteUsers => _remoteUsers;
 
   Future<void> initEngine() async {
+    if (_isEngineInit) return;
+
+    // Reload dotenv to make sure we have the latest keys in case user updated them
+    await dotenv.load(fileName: ".env");
+
     final appIdStr = dotenv.env['ZEGO_APP_ID'] ?? '0';
     final appId = int.tryParse(appIdStr) ?? 0;
     final appSign = dotenv.env['ZEGO_APP_SIGN'] ?? '';
@@ -29,16 +35,17 @@ class VoicePartyProvider extends ChangeNotifier {
     final status = await Permission.microphone.request();
     if (!status.isGranted) {
       debugPrint('Microphone permission denied');
-      return;
+      throw Exception('Microphone permission denied. Please allow it in settings.');
     }
 
     ZegoEngineProfile profile = ZegoEngineProfile(
-      appId == 0 ? 123456789 : appId, // mock for UI if missing
+      appId,
       ZegoScenario.HighQualityChatroom,
-      appSign: appSign.isEmpty ? 'mock_sign' : appSign,
+      appSign: appSign,
     );
 
     await ZegoExpressEngine.createEngineWithProfile(profile);
+    _isEngineInit = true;
 
     ZegoExpressEngine.onRoomUserUpdate = (String roomID, ZegoUpdateType updateType, List<ZegoUser> userList) {
       if (updateType == ZegoUpdateType.Add) {
@@ -56,9 +63,7 @@ class VoicePartyProvider extends ChangeNotifier {
     };
 
     ZegoExpressEngine.onRoomStateUpdate = (String roomID, ZegoRoomState state, int errorCode, Map<String, dynamic> extendedData) {
-      if (state == ZegoRoomState.Connected) {
-        _isJoined = true;
-      } else if (state == ZegoRoomState.Disconnected) {
+      if (state == ZegoRoomState.Disconnected) {
         _isJoined = false;
         _remoteUsers.clear();
         _currentRoomId = null;
@@ -71,10 +76,16 @@ class VoicePartyProvider extends ChangeNotifier {
     await initEngine();
 
     ZegoUser user = ZegoUser.id('user_${DateTime.now().millisecondsSinceEpoch}');
-    await ZegoExpressEngine.instance.loginRoom(roomId, user);
+    
+    final result = await ZegoExpressEngine.instance.loginRoom(roomId, user);
+    if (result.errorCode != 0) {
+      throw Exception('Failed to join party. Error code: ${result.errorCode}');
+    }
+
     await ZegoExpressEngine.instance.startPublishingStream('stream_${user.userID}');
     
     _currentRoomId = roomId;
+    _isJoined = true;
     notifyListeners();
   }
 
@@ -83,6 +94,10 @@ class VoicePartyProvider extends ChangeNotifier {
     if (_currentRoomId != null) {
       await ZegoExpressEngine.instance.logoutRoom(_currentRoomId!);
     }
+    _isJoined = false;
+    _remoteUsers.clear();
+    _currentRoomId = null;
+    notifyListeners();
   }
 
   void toggleMute() {
