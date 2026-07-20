@@ -69,6 +69,8 @@ class HomeScreen extends StatelessWidget {
                         _buildTierCard(context, data),
                         const SizedBox(height: 24),
                         _buildScanCTA(context).animate().fadeIn(delay: 100.ms).slideX(begin: -0.1, curve: Curves.easeOut),
+                        const SizedBox(height: 16),
+                        _buildPartyCTA(context).animate().fadeIn(delay: 150.ms).slideX(begin: -0.1, curve: Curves.easeOut),
                         const SizedBox(height: 32),
                         _buildStatsSection(context, stats),
                         const SizedBox(height: 32),
@@ -131,6 +133,20 @@ class HomeScreen extends StatelessWidget {
       label: const Text('SCAN NEW MATCH'),
       style: ElevatedButton.styleFrom(
         padding: const EdgeInsets.symmetric(vertical: 20),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      ),
+    );
+  }
+
+  Widget _buildPartyCTA(BuildContext context) {
+    return ElevatedButton.icon(
+      onPressed: () => context.push('/party'),
+      icon: const Icon(Icons.headset_mic),
+      label: const Text('JOIN VOICE LOBBY'),
+      style: ElevatedButton.styleFrom(
+        padding: const EdgeInsets.symmetric(vertical: 20),
+        backgroundColor: AppTheme.surfaceContainerHigh,
+        foregroundColor: Colors.white,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       ),
     );

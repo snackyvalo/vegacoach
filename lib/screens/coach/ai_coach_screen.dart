@@ -8,7 +8,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:flutter_markdown_plus/flutter_markdown_plus.dart';
 import 'package:provider/provider.dart';
 import '../../providers/auth_provider.dart';
 import '../../widgets/glass_container.dart';
@@ -305,6 +305,7 @@ class _AiCoachScreenState extends State<AiCoachScreen> {
               if (msg.text.isNotEmpty)
                 MarkdownBody(
                   data: msg.text,
+                  selectable: true,
                   styleSheet: MarkdownStyleSheet(
                     p: Theme.of(context).textTheme.bodyMedium?.copyWith(
                       color: msg.isUser ? Theme.of(context).colorScheme.primary : Colors.white,
@@ -312,6 +313,20 @@ class _AiCoachScreenState extends State<AiCoachScreen> {
                     strong: Theme.of(context).textTheme.bodyMedium?.copyWith(
                       color: msg.isUser ? Theme.of(context).colorScheme.primary : AppTheme.primaryContainer,
                       fontWeight: FontWeight.bold,
+                    ),
+                    em: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: msg.isUser ? Theme.of(context).colorScheme.primary : Colors.white,
+                      fontStyle: FontStyle.italic,
+                    ),
+                    listBullet: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: AppTheme.primaryContainer,
+                    ),
+                    blockquote: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: Colors.white70,
+                      fontStyle: FontStyle.italic,
+                    ),
+                    blockquoteDecoration: BoxDecoration(
+                      border: Border(left: BorderSide(color: AppTheme.primaryContainer, width: 4)),
                     ),
                   ),
                 ),

@@ -66,5 +66,28 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	
+	<!-- Voice Chat Permissions -->
+	<key>NSMicrophoneUsageDescription</key>
+	<string>This app requires microphone access to let you talk in voice parties.</string>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>audio</string>
+	</array>
+
+	<!-- Deep Linking -->
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>vegacoach</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>vegacoach</string>
+			</array>
+		</dict>
+	</array>
 </dict>
 </plist>

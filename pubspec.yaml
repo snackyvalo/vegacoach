@@ -50,8 +50,11 @@ dependencies:
   fl_chart: ^1.2.0
   youtube_player_flutter: ^10.0.1
   shimmer: ^3.0.0
-  flutter_markdown: ^0.7.7+1
-
+  flutter_markdown_plus: ^1.1.0
+  permission_handler: ^12.0.3
+  share_plus: ^10.0.0
+  app_links: ^7.2.1
+  zego_express_engine: ^3.24.1
 dev_dependencies:
   flutter_test:
     sdk: flutter
